@@ -1,92 +1,271 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
-/**
- *
- * @author Admin
- */
-// TonKhodao.java
-
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 import model.TonKho;
 
-public class TonKhodao {
+public class TonKhoDAO {
+
     DB db = new DB();
 
-    public ArrayList<TonKho> getAll() {
-        ArrayList<TonKho> list = new ArrayList<>();
-        try (Connection conn = db.getConnection()) {
-            String sql = "SELECT tk.*, sp.ten as tenSanPham, k.tenKho, vt.tenViTri " +
-                        "FROM ton_kho tk " +
-                        "LEFT JOIN sanpham sp ON tk.idSanPham = sp.id " +
-                        "LEFT JOIN kho k ON tk.idKho = k.id " +
-                        "LEFT JOIN vi_tri_kho vt ON tk.idViTri = vt.id";
-            PreparedStatement ps = conn.prepareStatement(sql);
+    public List<TonKho> getAll() {
+        List<TonKho> list = new ArrayList<>();
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT t.*, s.ten as tenSanPham, k.tenKho, v.maViTri " +
+                    "FROM tonkho t " +
+                    "LEFT JOIN sanpham s ON t.idSanPham = s.id " +
+                    "LEFT JOIN kho k ON t.idKho = k.id " +
+                    "LEFT JOIN vitri v ON t.idViTri = v.id " +
+                    "ORDER BY k.tenKho, s.ten"
+            );
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                TonKho tk = new TonKho(
-                    rs.getInt("id"),
-                    rs.getInt("idSanPham"),
-                    rs.getInt("idKho"),
-                    rs.getInt("idViTri"),
-                    rs.getInt("soLuong"),
-                    rs.getTimestamp("ngayCapNhat")
-                );
-                tk.setTenSanPham(rs.getString("tenSanPham"));
-                tk.setTenKho(rs.getString("tenKho"));
-                tk.setTenViTri(rs.getString("tenViTri"));
-                list.add(tk);
+                TonKho tonKho = new TonKho();
+                tonKho.setId(rs.getInt("id"));
+                tonKho.setIdSanPham(rs.getInt("idSanPham"));
+                tonKho.setIdKho(rs.getInt("idKho"));
+                tonKho.setIdViTri(rs.getInt("idViTri"));
+                tonKho.setSoLuong(rs.getInt("soLuong"));
+                tonKho.setTenSanPham(rs.getString("tenSanPham"));
+                tonKho.setTenKho(rs.getString("tenKho"));
+                tonKho.setMaViTri(rs.getString("maViTri"));
+                list.add(tonKho);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
-
-    public void updateTonKho(int idSanPham, int idKho, int idViTri, int soLuong) {
-        try (Connection conn = db.getConnection()) {
-            // Kiểm tra xem đã tồn tại chưa
-            String checkSql = "SELECT * FROM ton_kho WHERE idSanPham=? AND idKho=? AND idViTri=?";
-            PreparedStatement checkPs = conn.prepareStatement(checkSql);
-            checkPs.setInt(1, idSanPham);
-            checkPs.setInt(2, idKho);
-            checkPs.setInt(3, idViTri);
-            ResultSet rs = checkPs.executeQuery();
+    
+    public List<TonKho> getBySanPhamKho(int idSanPham, int idKho) {
+        List<TonKho> list = new ArrayList<>();
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT t.*, s.ten as tenSanPham, k.tenKho, v.maViTri " +
+                    "FROM tonkho t " +
+                    "LEFT JOIN sanpham s ON t.idSanPham = s.id " +
+                    "LEFT JOIN kho k ON t.idKho = k.id " +
+                    "LEFT JOIN vitri v ON t.idViTri = v.id " +
+                    "WHERE t.idSanPham = ? AND t.idKho = ? " +
+                    "ORDER BY t.idViTri"
+            );
             
-            if (rs.next()) {
-                // Update nếu đã tồn tại
-                String updateSql = "UPDATE ton_kho SET soLuong=?, ngayCapNhat=NOW() WHERE id=?";
-                PreparedStatement updatePs = conn.prepareStatement(updateSql);
-                updatePs.setInt(1, soLuong);
-                updatePs.setInt(2, rs.getInt("id"));
-                updatePs.executeUpdate();
-            } else {
-                // Insert nếu chưa tồn tại
-                String insertSql = "INSERT INTO ton_kho(idSanPham, idKho, idViTri, soLuong, ngayCapNhat) VALUES (?, ?, ?, ?, NOW())";
-                PreparedStatement insertPs = conn.prepareStatement(insertSql);
-                insertPs.setInt(1, idSanPham);
-                insertPs.setInt(2, idKho);
-                insertPs.setInt(3, idViTri);
-                insertPs.setInt(4, soLuong);
-                insertPs.executeUpdate();
-            }
-        } catch (Exception e) { e.printStackTrace(); }
-    }
-
-    public int getSoLuongTon(int idSanPham, int idKho) {
-        try (Connection conn = db.getConnection()) {
-            String sql = "SELECT SUM(soLuong) as total FROM ton_kho WHERE idSanPham=? AND idKho=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, idSanPham);
             ps.setInt(2, idKho);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("total");
+
+            while (rs.next()) {
+                TonKho tonKho = new TonKho();
+                tonKho.setId(rs.getInt("id"));
+                tonKho.setIdSanPham(rs.getInt("idSanPham"));
+                tonKho.setIdKho(rs.getInt("idKho"));
+                tonKho.setIdViTri(rs.getInt("idViTri"));
+                tonKho.setSoLuong(rs.getInt("soLuong"));
+                tonKho.setTenSanPham(rs.getString("tenSanPham"));
+                tonKho.setTenKho(rs.getString("tenKho"));
+                tonKho.setMaViTri(rs.getString("maViTri"));
+                list.add(tonKho);
             }
-        } catch (Exception e) { e.printStackTrace(); }
-        return 0;
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public boolean capNhatTonKho(TonKho tonKho) {
+        Connection conn = null;
+        try {
+            conn = db.getConnection();
+            conn.setAutoCommit(false); 
+            
+            PreparedStatement checkStmt = conn.prepareStatement(
+                    "SELECT id, soLuong FROM tonkho WHERE idSanPham = ? AND idKho = ? AND idViTri = ?"
+            );
+            checkStmt.setInt(1, tonKho.getIdSanPham());
+            checkStmt.setInt(2, tonKho.getIdKho());
+            checkStmt.setInt(3, tonKho.getIdViTri());
+            ResultSet rs = checkStmt.executeQuery();
+            
+            if (rs.next()) {
+                int currentQty = rs.getInt("soLuong");
+                int newQty = currentQty + tonKho.getSoLuong();
+                
+                PreparedStatement updateStmt = conn.prepareStatement(
+                        "UPDATE tonkho SET soLuong = ? WHERE id = ?"
+                );
+                updateStmt.setInt(1, newQty);
+                updateStmt.setInt(2, rs.getInt("id"));
+                updateStmt.executeUpdate();
+            } else {
+                PreparedStatement insertStmt = conn.prepareStatement(
+                        "INSERT INTO tonkho(idSanPham, idKho, idViTri, soLuong) VALUES (?, ?, ?, ?)"
+                );
+                insertStmt.setInt(1, tonKho.getIdSanPham());
+                insertStmt.setInt(2, tonKho.getIdKho());
+                insertStmt.setInt(3, tonKho.getIdViTri());
+                insertStmt.setInt(4, tonKho.getSoLuong());
+                insertStmt.executeUpdate();
+            }
+            
+            conn.commit(); 
+            conn.close();
+            return true;
+
+        } catch (Exception e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean dieuChinhTonKho(TonKho tonKho) {
+        Connection conn = null;
+        try {
+            conn = db.getConnection();
+            conn.setAutoCommit(false);
+            
+            PreparedStatement checkStmt = conn.prepareStatement(
+                    "SELECT id FROM tonkho WHERE idSanPham = ? AND idKho = ? AND idViTri = ?"
+            );
+            checkStmt.setInt(1, tonKho.getIdSanPham());
+            checkStmt.setInt(2, tonKho.getIdKho());
+            checkStmt.setInt(3, tonKho.getIdViTri());
+            ResultSet rs = checkStmt.executeQuery();
+            
+            if (rs.next()) {
+                PreparedStatement updateStmt = conn.prepareStatement(
+                        "UPDATE tonkho SET soLuong = ? WHERE id = ?"
+                );
+                updateStmt.setInt(1, tonKho.getSoLuong());
+                updateStmt.setInt(2, rs.getInt("id"));
+                updateStmt.executeUpdate();
+            } else {
+                PreparedStatement insertStmt = conn.prepareStatement(
+                        "INSERT INTO tonkho(idSanPham, idKho, idViTri, soLuong) VALUES (?, ?, ?, ?)"
+                );
+                insertStmt.setInt(1, tonKho.getIdSanPham());
+                insertStmt.setInt(2, tonKho.getIdKho());
+                insertStmt.setInt(3, tonKho.getIdViTri());
+                insertStmt.setInt(4, tonKho.getSoLuong());
+                insertStmt.executeUpdate();
+            }
+            
+            conn.commit();
+            conn.close();
+            return true;
+
+        } catch (Exception e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean delete(int id) {
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "DELETE FROM tonkho WHERE id=?"
+            );
+
+            ps.setInt(1, id);
+            int result = ps.executeUpdate();
+            conn.close();
+            
+            return result > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public TonKho getById(int id) {
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT t.*, s.ten as tenSanPham, k.tenKho, v.maViTri " +
+                    "FROM tonkho t " +
+                    "LEFT JOIN sanpham s ON t.idSanPham = s.id " +
+                    "LEFT JOIN kho k ON t.idKho = k.id " +
+                    "LEFT JOIN vitri v ON t.idViTri = v.id " +
+                    "WHERE t.id=?"
+            );
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                TonKho tonKho = new TonKho();
+                tonKho.setId(rs.getInt("id"));
+                tonKho.setIdSanPham(rs.getInt("idSanPham"));
+                tonKho.setIdKho(rs.getInt("idKho"));
+                tonKho.setIdViTri(rs.getInt("idViTri"));
+                tonKho.setSoLuong(rs.getInt("soLuong"));
+                tonKho.setTenSanPham(rs.getString("tenSanPham"));
+                tonKho.setTenKho(rs.getString("tenKho"));
+                tonKho.setMaViTri(rs.getString("maViTri"));
+                conn.close();
+                return tonKho;
+            }
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public int getTongTonKhoBySanPham(int idSanPham) {
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT SUM(soLuong) as tong FROM tonkho WHERE idSanPham = ?"
+            );
+            
+            ps.setInt(1, idSanPham);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                int tong = rs.getInt("tong");
+                conn.close();
+                return rs.wasNull() ? 0 : tong;
+            }
+            
+            conn.close();
+            return 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

@@ -26,17 +26,17 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author DELL
  */
-public class TonKhoView extends JFrame {
+public class ViTriView extends JFrame {
 
-    public JTextField txtID, txtIdSanPham, txtSoLuong;
-    public JComboBox<String> cbKho, cbViTri, cbLoaiCapNhat;
-    public JButton btnCapNhat, btnDieuChinh, btnXoa, btnLamMoi, btnLoadKho;
-    public JTable tblTonKho;
+    public JTextField txtID, txtMaViTri, txtGhiChu;
+    public JComboBox<String> cbKho;
+    public JButton btnThem, btnSua, btnXoa, btnLamMoi, btnLoadKho;
+    public JTable tblViTri;
     public DefaultTableModel tableModel;
 
-    public TonKhoView() {
-        setTitle("Quản lý Tồn kho");
-        setSize(1200, 650); // Rộng nhất vì nhiều cột
+    public ViTriView() {
+        setTitle("Quản lý Vị trí lưu trữ");
+        setSize(1000, 600); // Rộng hơn vì có nhiều cột
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -48,7 +48,7 @@ public class TonKhoView extends JFrame {
         pnlHeader.setBackground(new Color(230, 248, 245));
         pnlHeader.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(180, 220, 215)));
 
-        JLabel lblTitle = new JLabel("QUẢN LÝ TỒN KHO");
+        JLabel lblTitle = new JLabel("QUẢN LÝ VỊ TRÍ LƯU TRỮ");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblTitle.setForeground(new Color(0, 128, 128));
 
@@ -59,7 +59,7 @@ public class TonKhoView extends JFrame {
 
         JPanel pnlLeft = new JPanel();
         pnlLeft.setLayout(new BorderLayout());
-        pnlLeft.setPreferredSize(new Dimension(450, 0)); 
+        pnlLeft.setPreferredSize(new Dimension(400, 0)); 
         pnlLeft.setBackground(Color.WHITE);
         pnlLeft.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -67,18 +67,18 @@ public class TonKhoView extends JFrame {
         pnlForm.setLayout(new BoxLayout(pnlForm, BoxLayout.Y_AXIS));
         pnlForm.setBackground(Color.WHITE);
 
-        JLabel lblID = new JLabel("ID phiếu:");
+        JLabel lblID = new JLabel("ID:");
         lblID.setFont(fontLabel);
         txtID = new JTextField();
         txtID.setFont(fontLabel);
         txtID.setEnabled(false);
         txtID.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
-        JLabel lblIdSanPham = new JLabel("ID Sản phẩm:");
-        lblIdSanPham.setFont(fontLabel);
-        txtIdSanPham = new JTextField();
-        txtIdSanPham.setFont(fontLabel);
-        txtIdSanPham.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        JLabel lblMaViTri = new JLabel("Mã vị trí:");
+        lblMaViTri.setFont(fontLabel);
+        txtMaViTri = new JTextField();
+        txtMaViTri.setFont(fontLabel);
+        txtMaViTri.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
         JLabel lblKho = new JLabel("Kho:");
         lblKho.setFont(fontLabel);
@@ -95,47 +95,27 @@ public class TonKhoView extends JFrame {
         pnlKho.add(cbKho, BorderLayout.CENTER);
         pnlKho.add(btnLoadKho, BorderLayout.EAST);
 
-        JLabel lblViTri = new JLabel("Vị trí:");
-        lblViTri.setFont(fontLabel);
-        cbViTri = new JComboBox<>();
-        cbViTri.setFont(fontLabel);
-        cbViTri.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
-
-        JLabel lblLoaiCapNhat = new JLabel("Loại cập nhật:");
-        lblLoaiCapNhat.setFont(fontLabel);
-        cbLoaiCapNhat = new JComboBox<>(new String[]{"Nhập kho", "Xuất kho", "Điều chỉnh"});
-        cbLoaiCapNhat.setFont(fontLabel);
-        cbLoaiCapNhat.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
-
-        JLabel lblSoLuong = new JLabel("Số lượng:");
-        lblSoLuong.setFont(fontLabel);
-        txtSoLuong = new JTextField();
-        txtSoLuong.setFont(fontLabel);
-        txtSoLuong.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        JLabel lblGhiChu = new JLabel("Ghi chú:");
+        lblGhiChu.setFont(fontLabel);
+        txtGhiChu = new JTextField();
+        txtGhiChu.setFont(fontLabel);
+        txtGhiChu.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
         pnlForm.add(lblID);
         pnlForm.add(Box.createRigidArea(new Dimension(0, 5)));
         pnlForm.add(txtID);
         pnlForm.add(Box.createRigidArea(new Dimension(0, 10)));
-        pnlForm.add(lblIdSanPham);
+        pnlForm.add(lblMaViTri);
         pnlForm.add(Box.createRigidArea(new Dimension(0, 5)));
-        pnlForm.add(txtIdSanPham);
+        pnlForm.add(txtMaViTri);
         pnlForm.add(Box.createRigidArea(new Dimension(0, 10)));
         pnlForm.add(lblKho);
         pnlForm.add(Box.createRigidArea(new Dimension(0, 5)));
         pnlForm.add(pnlKho);
         pnlForm.add(Box.createRigidArea(new Dimension(0, 10)));
-        pnlForm.add(lblViTri);
+        pnlForm.add(lblGhiChu);
         pnlForm.add(Box.createRigidArea(new Dimension(0, 5)));
-        pnlForm.add(cbViTri);
-        pnlForm.add(Box.createRigidArea(new Dimension(0, 10)));
-        pnlForm.add(lblLoaiCapNhat);
-        pnlForm.add(Box.createRigidArea(new Dimension(0, 5)));
-        pnlForm.add(cbLoaiCapNhat);
-        pnlForm.add(Box.createRigidArea(new Dimension(0, 10)));
-        pnlForm.add(lblSoLuong);
-        pnlForm.add(Box.createRigidArea(new Dimension(0, 5)));
-        pnlForm.add(txtSoLuong);
+        pnlForm.add(txtGhiChu);
 
         pnlLeft.add(pnlForm, BorderLayout.NORTH);
 
@@ -144,12 +124,12 @@ public class TonKhoView extends JFrame {
         pnlButtons.setBackground(Color.WHITE);
         pnlButtons.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
-        btnCapNhat = new JButton("Cập nhật");
-        btnDieuChinh = new JButton("Điều chỉnh");
-        btnXoa = new JButton("Xóa phiếu");
+        btnThem = new JButton("Thêm");
+        btnSua = new JButton("Sửa");
+        btnXoa = new JButton("Xóa");
         btnLamMoi = new JButton("Làm mới");
 
-        JButton[] arrButtons = {btnCapNhat, btnDieuChinh, btnXoa, btnLamMoi};
+        JButton[] arrButtons = {btnThem, btnSua, btnXoa, btnLamMoi};
         Color btnColor = new Color(0, 150, 136);
 
         for (JButton btn : arrButtons) {
@@ -166,25 +146,21 @@ public class TonKhoView extends JFrame {
 
         pnlMain.add(pnlLeft, BorderLayout.WEST);
 
-        tableModel = new DefaultTableModel(new String[]{"ID", "Sản phẩm", "Kho", "Vị trí", "Số lượng", "Loại", "Ngày cập nhật"}, 0);
-        tblTonKho = new JTable(tableModel);
-        tblTonKho.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tblTonKho.setRowHeight(25);
+        tableModel = new DefaultTableModel(new String[]{"ID", "Mã vị trí", "Kho", "Ghi chú"}, 0);
+        tblViTri = new JTable(tableModel);
+        tblViTri.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tblViTri.setRowHeight(25);
 
-        tblTonKho.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        tblTonKho.getTableHeader().setBackground(new Color(0, 150, 136));
-        tblTonKho.getTableHeader().setForeground(Color.WHITE);
+        tblViTri.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tblViTri.getTableHeader().setBackground(new Color(0, 150, 136));
+        tblViTri.getTableHeader().setForeground(Color.WHITE);
 
+        tblViTri.getColumnModel().getColumn(0).setPreferredWidth(50);  
+        tblViTri.getColumnModel().getColumn(1).setPreferredWidth(100);  
+        tblViTri.getColumnModel().getColumn(2).setPreferredWidth(150);  
+        tblViTri.getColumnModel().getColumn(3).setPreferredWidth(200); 
 
-        tblTonKho.getColumnModel().getColumn(0).setPreferredWidth(50);  
-        tblTonKho.getColumnModel().getColumn(1).setPreferredWidth(80);   
-        tblTonKho.getColumnModel().getColumn(2).setPreferredWidth(100);  
-        tblTonKho.getColumnModel().getColumn(3).setPreferredWidth(80);   
-        tblTonKho.getColumnModel().getColumn(4).setPreferredWidth(70);   
-        tblTonKho.getColumnModel().getColumn(5).setPreferredWidth(100);  
-        tblTonKho.getColumnModel().getColumn(6).setPreferredWidth(120);  
-
-        JScrollPane scroll = new JScrollPane(tblTonKho);
+        JScrollPane scroll = new JScrollPane(tblViTri);
         scroll.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
 
         pnlMain.add(scroll, BorderLayout.CENTER);

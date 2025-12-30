@@ -1,91 +1,180 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
-/**
- *
- * @author Admin
- */
-// Khodao.java
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 import model.Kho;
 
-public class Khodao {
+public class KhoDAO {
+
     DB db = new DB();
 
-    public ArrayList<Kho> getAll() {
-        ArrayList<Kho> list = new ArrayList<>();
-        try (Connection conn = db.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM kho");
+    public List<Kho> getAll() {
+        List<Kho> list = new ArrayList<>();
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM kho ORDER BY tenKho");
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                list.add(new Kho(
-                    rs.getInt("id"),
-                    rs.getString("maKho"),
-                    rs.getString("tenKho"),
-                    rs.getString("diaChi"),
-                    rs.getString("sdt"),
-                    rs.getString("ghiChu")
-                ));
+                Kho kho = new Kho();
+                kho.setId(rs.getInt("id"));
+                kho.setTenKho(rs.getString("tenKho"));
+                kho.setDiaChi(rs.getString("diaChi"));
+                list.add(kho);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
-    public void insert(Kho kho) {
-        try (Connection conn = db.getConnection()) {
-            String sql = "INSERT INTO kho(maKho, tenKho, diaChi, sdt, ghiChu) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, kho.getMaKho());
-            ps.setString(2, kho.getTenKho());
-            ps.setString(3, kho.getDiaChi());
-            ps.setString(4, kho.getSdt());
-            ps.setString(5, kho.getGhiChu());
-            ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+    public boolean insert(Kho kho) {
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO kho(tenKho, diaChi) VALUES (?, ?)"
+            );
+
+            ps.setString(1, kho.getTenKho());
+            ps.setString(2, kho.getDiaChi());
+            int result = ps.executeUpdate();
+            conn.close();
+            
+            return result > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public void update(Kho kho) {
-        try (Connection conn = db.getConnection()) {
-            String sql = "UPDATE kho SET maKho=?, tenKho=?, diaChi=?, sdt=?, ghiChu=? WHERE id=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, kho.getMaKho());
-            ps.setString(2, kho.getTenKho());
-            ps.setString(3, kho.getDiaChi());
-            ps.setString(4, kho.getSdt());
-            ps.setString(5, kho.getGhiChu());
-            ps.setInt(6, kho.getId());
-            ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+    public boolean update(Kho kho) {
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE kho SET tenKho=?, diaChi=? WHERE id=?"
+            );
+
+            ps.setString(1, kho.getTenKho());
+            ps.setString(2, kho.getDiaChi());
+            ps.setInt(3, kho.getId());
+            int result = ps.executeUpdate();
+            conn.close();
+            
+            return result > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public void delete(int id) {
-        try (Connection conn = db.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM kho WHERE id=?");
+    public boolean delete(int id) {
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "DELETE FROM kho WHERE id=?"
+            );
+
             ps.setInt(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+            int result = ps.executeUpdate();
+            conn.close();
+            
+            return result > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public Kho findById(int id) {
-        try (Connection conn = db.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM kho WHERE id=?");
+    public Kho getById(int id) {
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM kho WHERE id=?"
+            );
+
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
-                return new Kho(
-                    rs.getInt("id"),
-                    rs.getString("maKho"),
-                    rs.getString("tenKho"),
-                    rs.getString("diaChi"),
-                    rs.getString("sdt"),
-                    rs.getString("ghiChu")
-                );
+                Kho kho = new Kho();
+                kho.setId(rs.getInt("id"));
+                kho.setTenKho(rs.getString("tenKho"));
+                kho.setDiaChi(rs.getString("diaChi"));
+                conn.close();
+                return kho;
             }
-        } catch (Exception e) { e.printStackTrace(); }
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    public List<Kho> findByTen(String tenKho) {
+        List<Kho> list = new ArrayList<>();
+        try {
+            Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM kho WHERE tenKho LIKE ? ORDER BY tenKho"
+            );
+
+            ps.setString(1, "%" + tenKho + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Kho kho = new Kho();
+                kho.setId(rs.getInt("id"));
+                kho.setTenKho(rs.getString("tenKho"));
+                kho.setDiaChi(rs.getString("diaChi"));
+                list.add(kho);
+            }
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public boolean isKhoInUse(int id) {
+        try {
+            Connection conn = db.getConnection();
+            
+            PreparedStatement ps1 = conn.prepareStatement(
+                    "SELECT COUNT(*) FROM vitri WHERE idKho = ?"
+            );
+            ps1.setInt(1, id);
+            ResultSet rs1 = ps1.executeQuery();
+            rs1.next();
+            int countViTri = rs1.getInt(1);
+            
+            PreparedStatement ps2 = conn.prepareStatement(
+                    "SELECT COUNT(*) FROM tonkho WHERE idKho = ?"
+            );
+            ps2.setInt(1, id);
+            ResultSet rs2 = ps2.executeQuery();
+            rs2.next();
+            int countTonKho = rs2.getInt(1);
+            
+            conn.close();
+            
+            return countViTri > 0 || countTonKho > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
     }
 }

@@ -1,117 +1,132 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
-/**
- *
- * @author Admin
- */
-// KhoController.java
-
-import dao.Khodao;
-import model.Kho;
-import view.KhoView;
-import javax.swing.*;
+import dao.KhoDAO;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.List;
+import model.Kho;
+import view.KhoView;
 
 public class KhoController {
+
     private KhoView view;
-    private Khodao dao;
+    private KhoDAO dao;
 
     public KhoController(KhoView view) {
         this.view = view;
-        this.dao = new Khodao();
+        this.dao = new KhoDAO();
+
         loadTable();
         addEvents();
     }
 
     private void loadTable() {
         view.tableModel.setRowCount(0);
-        ArrayList<Kho> list = dao.getAll();
-        for (Kho k : list) {
+        List<Kho> list = dao.getAll();
+
+        for (Kho kho : list) {
             view.tableModel.addRow(new Object[]{
-                k.getId(), k.getMaKho(), k.getTenKho(),
-                k.getDiaChi(), k.getSdt(), k.getGhiChu()
+                kho.getId(),
+                kho.getTenKho(),
+                kho.getDiaChi()
             });
         }
     }
 
     private void addEvents() {
+
         view.tblKho.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = view.tblKho.getSelectedRow();
                 if (row >= 0) {
                     view.txtID.setText(view.tableModel.getValueAt(row, 0).toString());
-                    view.txtMaKho.setText(view.tableModel.getValueAt(row, 1).toString());
-                    view.txtTenKho.setText(view.tableModel.getValueAt(row, 2).toString());
-                    view.txtDiaChi.setText(view.tableModel.getValueAt(row, 3).toString());
-                    view.txtSDT.setText(view.tableModel.getValueAt(row, 4).toString());
-                    view.txtGhiChu.setText(view.tableModel.getValueAt(row, 5).toString());
+                    view.txtTenKho.setText(view.tableModel.getValueAt(row, 1).toString());
+                    view.txtDiaChi.setText(view.tableModel.getValueAt(row, 2).toString());
                 }
             }
         });
 
         view.btnThem.addActionListener(e -> {
-            String maKho = view.txtMaKho.getText().trim();
             String tenKho = view.txtTenKho.getText().trim();
-            
-            if (maKho.isEmpty() || tenKho.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Mã kho và tên kho không được để trống!");
+            String diaChi = view.txtDiaChi.getText().trim();
+
+            if (tenKho.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Tên kho không được để trống!");
                 return;
             }
-            
-            dao.insert(new Kho(maKho, tenKho, view.txtDiaChi.getText(), 
-                             view.txtSDT.getText(), view.txtGhiChu.getText()));
-            loadTable();
-            clearForm();
-            JOptionPane.showMessageDialog(view, "Thêm kho thành công!");
+
+            Kho kho = new Kho();
+            kho.setTenKho(tenKho);
+            kho.setDiaChi(diaChi);
+
+            if (dao.insert(kho)) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Thêm kho thành công!");
+                loadTable();
+                clearForm();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(view, "Thêm kho thất bại!");
+            }
         });
 
         view.btnSua.addActionListener(e -> {
             if (view.txtID.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Hãy chọn kho để sửa!");
+                javax.swing.JOptionPane.showMessageDialog(view, "Vui lòng chọn kho cần sửa!");
                 return;
             }
-            
+
             int id = Integer.parseInt(view.txtID.getText());
-            String maKho = view.txtMaKho.getText().trim();
             String tenKho = view.txtTenKho.getText().trim();
-            
-            if (maKho.isEmpty() || tenKho.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Mã kho và tên kho không được để trống!");
+            String diaChi = view.txtDiaChi.getText().trim();
+
+            if (tenKho.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Tên kho không được để trống!");
                 return;
             }
-            
-            dao.update(new Kho(id, maKho, tenKho, view.txtDiaChi.getText(),
-                             view.txtSDT.getText(), view.txtGhiChu.getText()));
-            loadTable();
-            clearForm();
-            JOptionPane.showMessageDialog(view, "Cập nhật kho thành công!");
+
+            int confirm = javax.swing.JOptionPane.showConfirmDialog(view,
+                "Bạn có chắc chắn muốn sửa kho này?",
+                "Xác nhận",
+                javax.swing.JOptionPane.YES_NO_OPTION);
+
+            if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+                Kho kho = new Kho();
+                kho.setId(id);
+                kho.setTenKho(tenKho);
+                kho.setDiaChi(diaChi);
+
+                if (dao.update(kho)) {
+                    javax.swing.JOptionPane.showMessageDialog(view, "Sửa kho thành công!");
+                    loadTable();
+                    clearForm();
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(view, "Sửa kho thất bại!");
+                }
+            }
         });
 
         view.btnXoa.addActionListener(e -> {
-            if (view.txtID.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Hãy chọn kho để xóa!");
-                return;
-            }
-            
-            int id = Integer.parseInt(view.txtID.getText());
-            
-            int confirm = JOptionPane.showConfirmDialog(view,
-                    "Bạn có chắc chắn muốn xóa kho này?",
-                    "Xác nhận xóa",
-                    JOptionPane.YES_NO_OPTION);
-            
-            if (confirm == JOptionPane.YES_OPTION) {
-                dao.delete(id);
-                loadTable();
-                clearForm();
-                JOptionPane.showMessageDialog(view, "Xóa kho thành công!");
+            int row = view.tblKho.getSelectedRow();
+            if (row >= 0) {
+                int id = Integer.parseInt(view.tableModel.getValueAt(row, 0).toString());
+                String tenKho = view.tableModel.getValueAt(row, 1).toString();
+
+                int confirm = javax.swing.JOptionPane.showConfirmDialog(view,
+                    "Bạn có chắc chắn muốn xóa kho '" + tenKho + "'?",
+                    "Xác nhận",
+                    javax.swing.JOptionPane.YES_NO_OPTION);
+
+                if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+                    if (dao.delete(id)) {
+                        javax.swing.JOptionPane.showMessageDialog(view, "Xóa kho thành công!");
+                        loadTable();
+                        clearForm();
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog(view, "Xóa kho thất bại!");
+                    }
+                }
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(view, "Vui lòng chọn kho cần xóa!");
             }
         });
 
@@ -120,11 +135,8 @@ public class KhoController {
 
     private void clearForm() {
         view.txtID.setText("");
-        view.txtMaKho.setText("");
         view.txtTenKho.setText("");
         view.txtDiaChi.setText("");
-        view.txtSDT.setText("");
-        view.txtGhiChu.setText("");
         view.tblKho.clearSelection();
     }
 }
