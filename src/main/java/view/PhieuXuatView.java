@@ -105,7 +105,7 @@ public class PhieuXuatView extends JFrame {
         btnThem = new JButton("Thêm Phiếu");
         btnSua = new JButton("Sửa Phiếu");
         btnXoa = new JButton("Xóa Phiếu");
-        btnLamMoi = new JButton("Làm mới Form");
+        btnLamMoi = new JButton("Làm mới");
 
         JButton[] btns = {btnThem, btnSua, btnXoa, btnLamMoi};
         Color btnColor = new Color(0, 150, 136);

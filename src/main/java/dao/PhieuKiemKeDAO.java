@@ -30,15 +30,25 @@ public class PhieuKiemKeDAO {
         return list;
     }
 
-    public void insert(PhieuKiemKe pk) {
+    public int insert(PhieuKiemKe pk) {
         String sql = "INSERT INTO PhieuKiemKe (soPhieu, ngayKiemKe, idKho, ghiChu) VALUES (?, ?, ?, ?)";
-        try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = db.getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             ps.setString(1, pk.getSoPhieu());
-            ps.setTimestamp(2, new Timestamp(pk.getNgayKiemKe().getTime()));
+            ps.setTimestamp(2, new java.sql.Timestamp(pk.getNgayKiemKe().getTime()));
             ps.setInt(3, pk.getIdKho());
             ps.setString(4, pk.getGhiChu());
+
             ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1); // Trả về ID vừa tạo cho Controller
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public void update(PhieuKiemKe pk) {

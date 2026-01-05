@@ -1,12 +1,8 @@
 package controller;
 
 import dao.PhieuNhapDAO;
-import dao.CTPhieuNhapDAO;
-// Giả sử bạn đã có NhaCungCapDAO để lấy danh sách NCC đưa vào Combobox
-// Nếu chưa có, bạn cần tạo hoặc comment lại phần loadComboBox
 import dao.NhaCungCapDAO; 
 import model.PhieuNhap;
-import model.CTPhieuNhap;
 import model.NhaCungCap; // Import model NCC
 import view.PhieuNhapView;
 
@@ -17,14 +13,11 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import view.CTPhieuNhapView;
 
 public class PhieuNhapController {
-
     private PhieuNhapView view;
     private PhieuNhapDAO phieuNhapDAO;
-    private CTPhieuNhapDAO ctDAO;
-    private NhaCungCapDAO nccDAO; // Để lấy danh sách NCC
+    private NhaCungCapDAO nccDAO; 
 
     // List tạm để lưu NCC nhằm ánh xạ giữa Tên (trên combobox) và ID (trong CSDL)
     private List<NhaCungCap> listNCC; 
@@ -32,7 +25,6 @@ public class PhieuNhapController {
     public PhieuNhapController(PhieuNhapView view) {
         this.view = view;
         this.phieuNhapDAO = new PhieuNhapDAO();
-        this.ctDAO = new CTPhieuNhapDAO();
         this.nccDAO = new NhaCungCapDAO(); // Khởi tạo DAO NCC
 
         // 1. Load dữ liệu
@@ -235,22 +227,8 @@ public class PhieuNhapController {
                     if (row >= 0) {
                         int idPN = Integer.parseInt(view.tblPhieuNhap.getValueAt(row, 0).toString());
                         String soPhieu = view.tblPhieuNhap.getValueAt(row, 1).toString();
-                        showChiTiet(idPN, soPhieu);
                     }
                 }
-            }
-        });
-        
-        
-        // Thêm vào hàm addEvents()
-        view.btnXemChiTiet.addActionListener(e -> {
-            int row = view.tblPhieuNhap.getSelectedRow();
-            if (row >= 0) {
-                int idPN = Integer.parseInt(view.tblPhieuNhap.getValueAt(row, 0).toString());
-                String soPhieu = view.tblPhieuNhap.getValueAt(row, 1).toString();
-                showChiTiet(idPN, soPhieu); // Hàm showChiTiet tôi đã hướng dẫn ở câu trước
-            } else {
-                JOptionPane.showMessageDialog(view, "Hãy chọn 1 phiếu nhập trong bảng trước!");
             }
         });
 
@@ -266,27 +244,5 @@ public class PhieuNhapController {
         }
         view.tblPhieuNhap.clearSelection();
     }
-    
-    
-    private void showChiTiet(int idPN, String soPhieu) {
-    // Thêm dòng này để kiểm tra xem ID lấy ra là bao nhiêu
-    System.out.println("Đang truy vấn chi tiết cho Phiếu có ID = " + idPN); 
-    
-    CTPhieuNhapView detailView = new CTPhieuNhapView(view, soPhieu);
-    List<CTPhieuNhap> list = ctDAO.getListByPhieuNhap(idPN);
-    
-    // Kiểm tra xem list có dữ liệu không
-    System.out.println("Số lượng bản ghi tìm thấy: " + list.size());
 
-    detailView.tableModel.setRowCount(0);
-    for (CTPhieuNhap ct : list) {
-        detailView.tableModel.addRow(new Object[]{
-            ct.getIdSanPham(),
-            ct.getSoLuong(),
-            ct.getGiaNhap(),
-            ct.getIdViTri()
-        });
-    }
-    detailView.setVisible(true);
-    }
 }

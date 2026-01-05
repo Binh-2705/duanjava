@@ -75,7 +75,7 @@ public class MainView extends JFrame {
 
         // ========== HEADER CARD STYLE ==========
         JPanel header = new JPanel();
-        header.setBackground(new Color(230, 248, 245)); // pastel xanh ngọc
+        header.setBackground(new Color(230, 248, 245)); 
         header.setBorder(BorderFactory.createLineBorder(new Color(180, 220, 215), 2));
         header.setPreferredSize(new Dimension(0, 110));
         header.setLayout(new BorderLayout());

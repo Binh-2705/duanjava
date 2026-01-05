@@ -1,18 +1,7 @@
 package controller;
 
-import view.BaoCaoView;
-import view.DanhmucView;
-import view.DonviView;
-import view.MainView;
-import view.SanphamView;
-import view.NhaCungCapView;
-import view.KhachHangView;
-import view.KhoView;
-import view.PhieuKiemKeView;
-import view.PhieuNhapView;
-import view.PhieuXuatView;
-import view.ViTriView;
-import view.TonKhoView;
+import view.*;
+import javax.swing.JOptionPane;
 
 public class MainController {
 
@@ -65,22 +54,22 @@ public class MainController {
             new TonKhoController(tkv);
             tkv.setVisible(true);
         });
-        
-        // ========== NHẬP – KIỂM KÊ ==========
+
+        // Sự kiện Nhập hàng
         view.menuNhap.addActionListener(e -> {
             PhieuNhapView pnv = new PhieuNhapView(); 
             new PhieuNhapController(pnv);         
-            pnv.setVisible(true);               
+            pnv.setVisible(true);                
         });
-        
-        // ========== XUAT ==========
+
+        // Sự kiện Xuất hàng
         view.menuXuat.addActionListener(e -> {
             PhieuXuatView pxv = new PhieuXuatView(); 
             new PhieuXuatController(pxv);      
             pxv.setVisible(true);        
         }); 
-        
-            // Sự kiện Kiểm kê (tạm thời để trống)
+
+        // Sự kiện Kiểm kê 
         view.menuKiemKe.addActionListener(e -> {
             PhieuKiemKeView pkView = new PhieuKiemKeView();
             new PhieuKiemKeController(pkView);
@@ -100,11 +89,12 @@ public class MainController {
             new KhachHangController(khV);
             khV.setVisible(true);
         });
-        //sự kiện bao cáo
+
+        // Sự kiện Báo cáo
         view.menuBaoCao.addActionListener(e -> {
             BaoCaoView bcView = new BaoCaoView();
             new BaoCaoController(bcView);
             bcView.setVisible(true);
-});
-    }
-}
+        });
+    }   
+}       

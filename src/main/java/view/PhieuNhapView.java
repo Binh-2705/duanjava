@@ -14,7 +14,7 @@ public class PhieuNhapView extends JFrame {
 
     // ===== BUTTON =====
     // Đã thêm btnXemChiTiet vào đây
-    public JButton btnThem, btnSua, btnXoa, btnLamMoi, btnXemChiTiet; 
+    public JButton btnThem, btnSua, btnXoa, btnLamMoi; 
 
     // ===== TABLE =====
     public JTable tblPhieuNhap;
@@ -98,10 +98,9 @@ public class PhieuNhapView extends JFrame {
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
         btnLamMoi = new JButton("Làm mới");
-        btnXemChiTiet = new JButton("Xem chi tiết phiếu"); // Nút mới
 
         // Thêm nút mới vào mảng để định dạng màu sắc
-        JButton[] btns = {btnThem, btnSua, btnXoa, btnLamMoi, btnXemChiTiet};
+        JButton[] btns = {btnThem, btnSua, btnXoa, btnLamMoi};
         Color btnColor = new Color(0, 150, 136);
 
         for (JButton btn : btns) {

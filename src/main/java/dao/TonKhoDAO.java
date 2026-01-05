@@ -268,4 +268,8 @@ public class TonKhoDAO {
             return 0;
         }
     }
+
+    public List<TonKho> getByKho(int idKhoSelected) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
