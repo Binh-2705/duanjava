@@ -32,7 +32,6 @@ public class KhachHangController {
     }
 
     private void addEvents() {
-        // Sự kiện Click bảng
         view.tblKhachHang.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -47,7 +46,6 @@ public class KhachHangController {
             }
         });
 
-        // Xử lý Tìm kiếm Real-time
         view.txtTimKiem.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { handleSearch(); }
             public void removeUpdate(DocumentEvent e) { handleSearch(); }

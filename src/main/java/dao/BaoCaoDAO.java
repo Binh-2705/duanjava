@@ -6,8 +6,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class BaoCaoDAO {
     DB db = new DB();
-
-    // 1. Lọc báo cáo Nhập Kho
     public void loadBaoCaoNhap(DefaultTableModel model, Date tuNgay, Date denNgay) {
         model.setRowCount(0);
         model.setColumnIdentifiers(new Object[]{"ID", "Số Phiếu Nhập", "Ngày Nhập", "Nhà Cung Cấp", "Ghi Chú"});
@@ -32,7 +30,6 @@ public class BaoCaoDAO {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    // 2. Lọc báo cáo Xuất Kho
     public void loadBaoCaoXuat(DefaultTableModel model, Date tuNgay, Date denNgay) {
         model.setRowCount(0);
         model.setColumnIdentifiers(new Object[]{"ID", "Số Phiếu Xuất", "Ngày Xuất", "Khách Hàng", "Ghi Chú"});

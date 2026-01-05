@@ -13,7 +13,6 @@ public class BaoCaoController {
         this.view = view;
         this.dao = new BaoCaoDAO();
         
-        // Sự kiện khi bấm nút Báo Cáo Nhập
         view.btnLocNhap.addActionListener(e -> {
             Date tu = (Date) view.spTuNgay.getValue();
             Date den = (Date) view.spDenNgay.getValue();
@@ -21,7 +20,6 @@ public class BaoCaoController {
             updateSummary("Phiếu Nhập");
         });
 
-        // Sự kiện khi bấm nút Báo Cáo Xuất
         view.btnLocXuat.addActionListener(e -> {
             Date tu = (Date) view.spTuNgay.getValue();
             Date den = (Date) view.spDenNgay.getValue();

@@ -9,7 +9,6 @@ public class NhaCungCap {
 
     public NhaCungCap() {}
 
-    // Dùng khi lấy dữ liệu từ DB (có ID)
     public NhaCungCap(int id, String ten, String sdt, String diaChi, String email) {
         this.id = id;
         this.ten = ten;
@@ -18,7 +17,6 @@ public class NhaCungCap {
         this.email = email;
     }
 
-    // Dùng khi thêm mới (không cần ID)
     public NhaCungCap(String ten, String sdt, String diaChi, String email) {
         this.ten = ten;
         this.sdt = sdt;
@@ -26,7 +24,6 @@ public class NhaCungCap {
         this.email = email;
     }
 
-    // Getter và Setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getTen() { return ten; }

@@ -12,13 +12,12 @@ public class BaoCaoView extends JFrame {
     public JLabel lblTongCong;
 
     public BaoCaoView() {
-        setTitle("HỆ THỐNG BÁO CÁO TỔNG HỢP - NGƯỜI 4");
+        setTitle("HỆ THỐNG BÁO CÁO TỔNG HỢP ");
         setSize(1100, 650);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // --- Panel Bộ Lọc (Phía trên) ---
         JPanel pnlFilter = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
         pnlFilter.setBorder(BorderFactory.createTitledBorder("Bộ lọc thời gian"));
 
@@ -44,14 +43,12 @@ public class BaoCaoView extends JFrame {
         pnlFilter.add(btnLocXuat);
         add(pnlFilter, BorderLayout.NORTH);
 
-        // --- Bảng Dữ Liệu (Ở giữa) ---
         tableModel = new DefaultTableModel();
         tblBaoCao = new JTable(tableModel);
         tblBaoCao.setRowHeight(30);
         tblBaoCao.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
         add(new JScrollPane(tblBaoCao), BorderLayout.CENTER);
 
-        // --- Panel Tổng Cộng (Phía dưới) ---
         JPanel pnlStatus = new JPanel(new FlowLayout(FlowLayout.RIGHT, 30, 10));
         pnlStatus.setBackground(new Color(235, 235, 235));
         lblTongCong = new JLabel("Tổng số phiếu: 0");

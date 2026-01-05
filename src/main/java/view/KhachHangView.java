@@ -17,7 +17,6 @@ public class KhachHangView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Header
         JPanel pnlHeader = new JPanel();
         pnlHeader.setBackground(new Color(230, 248, 245));
         JLabel lblTitle = new JLabel("QUẢN LÝ KHÁCH HÀNG");
@@ -26,10 +25,10 @@ public class KhachHangView extends JFrame {
         pnlHeader.add(lblTitle);
         add(pnlHeader, BorderLayout.NORTH);
 
-        // Main Content
+        // Main 
         JPanel pnlMain = new JPanel(new BorderLayout());
         
-        // --- LEFT PANEL: NHẬP LIỆU ---
+
         JPanel pnlLeft = new JPanel();
         pnlLeft.setLayout(new BoxLayout(pnlLeft, BoxLayout.Y_AXIS));
         pnlLeft.setPreferredSize(new Dimension(300, 0));
@@ -59,7 +58,6 @@ public class KhachHangView extends JFrame {
 
         pnlMain.add(pnlLeft, BorderLayout.WEST);
 
-        // --- RIGHT PANEL: TÌM KIẾM & BẢNG ---
         JPanel pnlRight = new JPanel(new BorderLayout());
         
         JPanel pnlSearch = new JPanel(new FlowLayout(FlowLayout.LEFT));
