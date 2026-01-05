@@ -39,7 +39,7 @@ public class TonKhoController {
         }
         
         view.cbKho.setModel(model);
-        loadViTriComboBox(); // Load vị trí sau khi có kho
+        loadViTriComboBox(); 
     }
 
     private void loadViTriComboBox() {

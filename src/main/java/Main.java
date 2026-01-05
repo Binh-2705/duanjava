@@ -1,16 +1,11 @@
-import view.DanhmucView;
-import controller.DanhmucController;
-import controller.MainController;
-import view.MainView;
-import view.NhaCungCapView;
-import controller.NhaCungCapController;
+import controller.LoginController;
+import view.LoginView;
 
 public class Main {
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {
-            MainView mv = new MainView();
-            mv.setVisible(true);
-            new MainController(mv);
+            LoginView loginView = new LoginView();
+            new LoginController(loginView);
         });
     }
 }

@@ -13,7 +13,8 @@ public class MainController {
     }
 
     private void addEvents() {
-        // Sự kiện Danh mục
+        
+       
         view.menuDanhMuc.addActionListener(e -> {
             DanhmucView dv = new DanhmucView();
             new DanhmucController(dv);
